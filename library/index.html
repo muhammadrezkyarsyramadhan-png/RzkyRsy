@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="RzkyLibrary is a public code snippet library for developers. Search, find, read, copy, and build faster with practical code snippets." />
+  <meta name="theme-color" content="#0f172a" />
+  <meta property="og:title" content="RzkyLibrary — Your Developer Toolbox" />
+  <meta property="og:description" content="Practical code snippets, ready to copy and use." />
+  <meta property="og:type" content="website" />
+  <title>RzkyLibrary — Your Developer Toolbox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: '0 10px 30px rgba(0,0,0,.08)',
+            glow: '0 0 0 1px rgba(99,102,241,.15), 0 20px 50px rgba(99,102,241,.12)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { color-scheme: light; }
+    .dark { color-scheme: dark; }
+    .glass { backdrop-filter: blur(14px); background: rgba(255,255,255,.72); }
+    .dark .glass { background: rgba(15,23,42,.68); }
+    .code-editor { counter-reset: line; }
+    .code-line::before {
+      counter-increment: line;
+      content: counter(line);
+      display: inline-block;
+      width: 2.25rem;
+      margin-right: 1rem;
+      color: rgb(148 163 184);
+      text-align: right;
+      user-select: none;
+    }
+    .fade-in { animation: fadeIn .35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .toast-enter { animation: toastIn .28s ease both; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+  <div id="app"></div>
+
+  <script>
+    const LS = {
+      theme: 'rzky_theme',
+      fav: 'rzky_favorites',
+      recent: 'rzky_recent',
+      snippets: 'rzky_snippets',
+      admin: 'rzky_admin_auth',
+      views: 'rzky_views',
+      copies: 'rzky_copies',
+      categories: 'rzky_categories',
+      languages: 'rzky_languages',
+      activities: 'rzky_activities'
+    };
+
+    const defaultCategories = ['All','HTML','CSS','JavaScript','React','Tailwind CSS','Bootstrap','Navigation','Buttons','Cards','Forms','Modal','Animation','Layout','Utilities'];
+    const defaultLanguages = ['HTML','CSS','JavaScript','React','Tailwind CSS','Bootstrap','TypeScript','Python','PHP','Java','C++'];
+
+    const defaultSnippets = [
+      {id:'1',title:'Responsive Navbar',description:'Navbar responsif dengan mobile menu.',functionText:'Membuat navigasi adaptif untuk desktop dan mobile.',useCase:'Website company, portfolio, dashboard.',language:'HTML / CSS / JS',category:'Navigation',difficulty:'Beginner',tags:['navbar','responsive','menu'],status:'Published',icon:'☰',views:128,copies:58,createdAt:'2026-01-10',updatedAt:'2026-01-10',code:{html:`<nav class="nav">\n  <div class="brand">RzkyLibrary</div>\n  <button class="menu-btn" onclick="toggleMenu()">☰</button>\n  <ul id="menu" class="menu">\n    <li>Home</li><li>Library</li><li>About</li>\n  </ul>\n</nav>`,css:`.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#111827;color:#fff;border-radius:16px}.menu{display:flex;gap:18px;list-style:none}.menu-btn{display:none}@media (max-width:768px){.menu-btn{display:block}.menu{display:none;flex-direction:column}.menu.open{display:flex}}`,js:`function toggleMenu(){document.getElementById('menu').classList.toggle('open')}`}},
+      {id:'2',title:'Mobile Hamburger Menu',description:'Menu mobile yang slide dari samping.',functionText:'Membuka navigasi mobile dengan animasi.',useCase:'Responsive navigation.',language:'HTML / CSS / JS',category:'Navigation',difficulty:'Beginner',tags:['hamburger','sidebar','mobile'],status:'Published',icon:'≡',views:96,copies:41,createdAt:'2026-01-11',updatedAt:'2026-01-11',code:{html:`<button onclick="openSidebar()">Menu</button>\n<aside id="sidebar" class="sidebar">Menu Items</aside>`,css:`.sidebar{position:fixed;inset:0 auto 0 -280px;width:280px;background:#0f172a;color:#fff;transition:.3s;padding:24px}.sidebar.open{left:0}`,js:`function openSidebar(){document.getElementById('sidebar').classList.toggle('open')}`}},
+      {id:'3',title:'Glassmorphism Card',description:'Card modern dengan efek glass ringan.',functionText:'Membuat tampilan card yang soft dan elegant.',useCase:'Feature card, profile, pricing.',language:'HTML / CSS',category:'Cards',difficulty:'Beginner',tags:['glass','card','blur'],status:'Published',icon:'◫',views:121,copies:52,createdAt:'2026-01-12',updatedAt:'2026-01-12',code:{html:`<div class="glass-card">Glass Card</div>`,css:`.glass-card{padding:24px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.14);backdrop-filter:blur(16px);border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}`}},
+      {id:'4',title:'Glow Button',description:'Button dengan efek glow lembut.',functionText:'Memberikan emphasis pada CTA.',useCase:'Primary action button.',language:'HTML / CSS',category:'Buttons',difficulty:'Beginner',tags:['button','glow','cta'],status:'Published',icon:'✦',views:140,copies:60,createdAt:'2026-01-13',updatedAt:'2026-01-13',code:{html:`<button class="glow-btn">Get Started</button>`,css:`.glow-btn{padding:14px 20px;border-radius:14px;border:none;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 10px 30px rgba(99,102,241,.35);transition:.25s}.glow-btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(99,102,241,.5)}`}},
+      {id:'5',title:'Loading Spinner',description:'Spinner loading sederhana dan halus.',functionText:'Menunjukkan status loading.',useCase:'Async data, API request.',language:'HTML / CSS',category:'Utilities',difficulty:'Beginner',tags:['loading','spinner'],status:'Published',icon:'◌',views:89,copies:33,createdAt:'2026-01-14',updatedAt:'2026-01-14',code:{html:`<div class="spinner"></div>`,css:`.spinner{width:44px;height:44px;border:4px solid #cbd5e1;border-top-color:#6366f1;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}`}},
+      {id:'6',title:'Modal Dialog',description:'Modal clean untuk konfirmasi atau form.',functionText:'Menampilkan konten overlay fokus.',useCase:'Alert, form, detail preview.',language:'HTML / CSS / JS',category:'Modal',difficulty:'Beginner',tags:['modal','overlay','dialog'],status:'Published',icon:'▣',views:150,copies:77,createdAt:'2026-01-15',updatedAt:'2026-01-15',code:{html:`<button onclick="openModal()">Open</button>\n<div id="modal" class="modal hidden"><div class="box">Modal</div></div>`,css:`.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:grid;place-items:center}.hidden{display:none}.box{background:#fff;border-radius:20px;padding:24px;min-width:280px}`,js:`function openModal(){document.getElementById('modal').classList.toggle('hidden')}`}},
+      {id:'7',title:'Toast Notification',description:'Notifikasi toast kecil di pojok layar.',functionText:'Memberi feedback cepat ke user.',useCase:'Success/error messages.',language:'HTML / CSS / JS',category:'Utilities',difficulty:'Beginner',tags:['toast','notification'],status:'Published',icon:'⟡',views:111,copies:49,createdAt:'2026-01-16',updatedAt:'2026-01-16',code:{html:`<button onclick="showToast()">Show Toast</button>\n<div id="toast" class="toast">Saved successfully</div>`,css:`.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:14px 16px;border-radius:14px;opacity:0;transform:translateY(10px);transition:.25s}.toast.show{opacity:1;transform:translateY(0)}`,js:`function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}`}},
+      {id:'8',title:'Copy To Clipboard',description:'Button copy text atau code.',functionText:'Menyalin konten ke clipboard.',useCase:'Docs, code snippets.',language:'JavaScript',category:'Utilities',difficulty:'Beginner',tags:['copy','clipboard'],status:'Published',icon:'⎘',views:130,copies:66,createdAt:'2026-01-17',updatedAt:'2026-01-17',code:{js:`async function copyText(text){await navigator.clipboard.writeText(text);alert('Copied!')}`}},
+      {id:'9',title:'Dark Mode Toggle',description:'Toggle tema light dan dark.',functionText:'Mengubah tema secara persist.',useCase:'Any modern website.',language:'JavaScript',category:'Utilities',difficulty:'Beginner',tags:['dark mode','theme'],status:'Published',icon:'◐',views:160,copies:84,createdAt:'2026-01-18',updatedAt:'2026-01-18',code:{js:`const root=document.documentElement;const isDark=root.classList.toggle('dark')`}},
+      {id:'10',title:'Scroll Progress Bar',description:'Progress bar scroll di atas halaman.',functionText:'Menunjukkan progres baca.',useCase:'Article pages.',language:'HTML / CSS / JS',category:'Animation',difficulty:'Beginner',tags:['scroll','progress'],status:'Published',icon:'▮',views:103,copies:42,createdAt:'2026-01-19',updatedAt:'2026-01-19',code:{html:`<div id="bar"></div>`,css:`#bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,#6366f1,#8b5cf6);width:0%;z-index:50}`,js:`window.addEventListener('scroll',()=>{const p=(scrollY/(document.body.scrollHeight-innerHeight))*100;document.getElementById('bar').style.width=p+'%';})`}},
+      {id:'11',title:'Back To Top',description:'Tombol kembali ke atas halaman.',functionText:'Mempermudah navigasi panjang.',useCase:'Blog, docs.',language:'HTML / CSS / JS',category:'Utilities',difficulty:'Beginner',tags:['top','button'],status:'Published',icon:'↑',views:85,copies:31,createdAt:'2026-01-20',updatedAt:'2026-01-20',code:{html:`<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">Top</button>`}},
+      {id:'12',title:'Accordion',description:'Accordion expandable/collapsible.',functionText:'Menampilkan konten ringkas.',useCase:'FAQ, settings.',language:'HTML / CSS / JS',category:'Layout',difficulty:'Beginner',tags:['accordion','faq'],status:'Published',icon:'⌄',views:122,copies:51,createdAt:'2026-01-21',updatedAt:'2026-01-21',code:{html:`<button onclick="this.nextElementSibling.classList.toggle('open')">Open</button><div class="panel">Content</div>`,css:`.panel{max-height:0;overflow:hidden;transition:.3s}.panel.open{max-height:200px}`}},
+      {id:'13',title:'Tabs',description:'Switch content menggunakan tabs.',functionText:'Mengelola multiple panel dalam satu area.',useCase:'Settings, docs.',language:'HTML / CSS / JS',category:'Layout',difficulty:'Beginner',tags:['tabs','panel'],status:'Published',icon:'▤',views:104,copies:46,createdAt:'2026-01-22',updatedAt:'2026-01-22',code:{html:`<button onclick="tab('a')">Tab A</button><button onclick="tab('b')">Tab B</button><div id="a">A</div><div id="b" hidden>B</div>`,js:`function tab(id){['a','b'].forEach(x=>document.getElementById(x).hidden=x!==id)}`}},
+      {id:'14',title:'Dropdown Menu',description:'Dropdown menu yang rapi.',functionText:'Menyediakan menu pilihan.',useCase:'User actions, filters.',language:'HTML / CSS / JS',category:'Navigation',difficulty:'Beginner',tags:['dropdown','menu'],status:'Published',icon:'▾',views:97,copies:39,createdAt:'2026-01-23',updatedAt:'2026-01-23',code:{html:`<button onclick="d.classList.toggle('open')">Options</button><div id="d" class="drop">Item 1</div>`,css:`.drop{display:none}.drop.open{display:block}`}},
+      {id:'15',title:'Tooltip',description:'Tooltip kecil saat hover.',functionText:'Menjelaskan aksi secara singkat.',useCase:'Icons, buttons.',language:'HTML / CSS',category:'Utilities',difficulty:'Beginner',tags:['tooltip','hover'],status:'Published',icon:'i',views:93,copies:34,createdAt:'2026-01-24',updatedAt:'2026-01-24',code:{html:`<span class="tip">Hover me<span class="bubble">Tooltip</span></span>`,css:`.tip{position:relative}.bubble{position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:6px 10px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s}.tip:hover .bubble{opacity:1}`}},
+      {id:'16',title:'Skeleton Loading',description:'Placeholder loading untuk konten.',functionText:'Menjaga UI tetap terasa cepat.',useCase:'Cards, lists.',language:'HTML / CSS',category:'Utilities',difficulty:'Beginner',tags:['skeleton','placeholder'],status:'Published',icon:'▒',views:109,copies:43,createdAt:'2026-01-25',updatedAt:'2026-01-25',code:{html:`<div class="sk"></div>`,css:`.sk{height:120px;border-radius:16px;background:linear-gradient(90deg,#e2e8f0 25%,#f8fafc 37%,#e2e8f0 63%);background-size:400% 100%;animation:sh 1.4s ease infinite}@keyframes sh{0%{background-position:100% 0}100%{background-position:0 0}}`}},
+      {id:'17',title:'Animated Gradient',description:'Background gradient yang bergerak lembut.',functionText:'Memberi visual interest tanpa berlebihan.',useCase:'Hero section, banner.',language:'CSS',category:'Animation',difficulty:'Beginner',tags:['gradient','background'],status:'Published',icon:'◈',views:116,copies:48,createdAt:'2026-01-26',updatedAt:'2026-01-26',code:{css:`.grad{background:linear-gradient(-45deg,#0f172a,#4338ca,#8b5cf6,#06b6d4);background-size:400% 400%;animation:grad 12s ease infinite}@keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}`}},
+      {id:'18',title:'Typewriter Effect',description:'Efek mengetik teks otomatis.',functionText:'Menampilkan pesan dengan animasi typing.',useCase:'Hero headline.',language:'HTML / CSS / JS',category:'Animation',difficulty:'Beginner',tags:['typewriter','text'],status:'Published',icon:'⌨',views:132,copies:57,createdAt:'2026-01-27',updatedAt:'2026-01-27',code:{html:`<h1 id="tw"></h1>`,js:`const t='Find it. Copy it. Build it.';let i=0;setInterval(()=>{tw.textContent=t.slice(0,++i% (t.length+1))},90)`}},
+      {id:'19',title:'Responsive Grid',description:'Grid layout yang adaptif.',functionText:'Menyusun card secara otomatis.',useCase:'Portfolio, gallery.',language:'HTML / CSS',category:'Layout',difficulty:'Beginner',tags:['grid','responsive'],status:'Published',icon:'▥',views:118,copies:44,createdAt:'2026-01-28',updatedAt:'2026-01-28',code:{html:`<div class="grid"><div>1</div><div>2</div><div>3</div></div>`,css:`.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}`}},
+      {id:'20',title:'Image Hover Effect',description:'Efek hover ringan pada gambar.',functionText:'Membuat image lebih hidup saat hover.',useCase:'Gallery, product cards.',language:'CSS',category:'Utilities',difficulty:'Beginner',tags:['image','hover','scale'],status:'Published',icon:'◐',views:101,copies:37,createdAt:'2026-01-29',updatedAt:'2026-01-29',code:{css:`.img-hover{transition:.3s ease}.img-hover:hover{transform:scale(1.04);filter:saturate(1.08)}}`}
+    ];
+
+    const $ = (s, p=document) => p.querySelector(s);
+    const load = (k, d) => JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
+    const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+    function initData(){
+      if(!localStorage.getItem(LS.categories)) save(LS.categories, defaultCategories);
+      if(!localStorage.getItem(LS.languages)) save(LS.languages, defaultLanguages);
+      if(!localStorage.getItem(LS.snippets)) save(LS.snippets, defaultSnippets);
+      if(!localStorage.getItem(LS.fav)) save(LS.fav, []);
+      if(!localStorage.getItem(LS.recent)) save(LS.recent, []);
+      if(!localStorage.getItem(LS.activities)) save(LS.activities, []);
+      if(!localStorage.getItem(LS.views)) save(LS.views, {});
+      if(!localStorage.getItem(LS.copies)) save(LS.copies, {});
+      if(!localStorage.getItem(LS.theme)) localStorage.setItem(LS.theme, 'dark');
+    }
+
+    initData();
+
+    const state = {
+      route: location.hash || '#home',
+      query: '',
+      category: 'All',
+      sort: 'Newest',
+      activeSnippet: null,
+      adminTab: 'snippets',
+      adminAuth: localStorage.getItem(LS.admin) === 'true',
+      adminLoginOpen: false,
+    };
+
+    function setTheme(){
+      document.documentElement.classList.toggle('dark', localStorage.getItem(LS.theme) === 'dark');
+    }
+    setTheme();
+
+    function recordRecent(id){
+      const recent = load(LS.recent, []);
+      const next = [id, ...recent.filter(x => x !== id)].slice(0, 6);
+      save(LS.recent, next);
+    }
+
+    function incMetric(key, id){
+      const data = load(key, {});
+      data[id] = (data[id] || 0) + 1;
+      save(key, data);
+    }
+
+    function activity(text){
+      const acts = load(LS.activities, []);
+      acts.unshift({ text, at: new Date().toLocaleString() });
+      save(LS.activities, acts.slice(0, 8));
+    }
+
+    function filteredSnippets(){
+      let snippets = load(LS.snippets, []);
+      const q = state.query.toLowerCase().trim();
+      if(q){
+        snippets = snippets.filter(s => [s.title,s.description,s.language,s.category,...(s.tags||[])].join(' ').toLowerCase().includes(q));
+      }
+      if(state.category !== 'All') snippets = snippets.filter(s => s.category === state.category || s.language.includes(state.category));
+      switch(state.sort){
+        case 'A-Z': snippets.sort((a,b)=>a.title.localeCompare(b.title)); break;
+        case 'Most Popular': snippets.sort((a,b)=>(b.views||0)+(b.copies||0)-(a.views||0)-(a.copies||0)); break;
+        case 'Difficulty': snippets.sort((a,b)=>a.difficulty.localeCompare(b.difficulty)); break;
+        default: snippets.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+      }
+      return snippets;
+    }
+
+    function render(){
+      const app = $('#app');
+      const route = location.hash || '#home';
+      const snippets = load(LS.snippets, []);
+      const favorites = load(LS.fav, []);
+      const categories = load(LS.categories, defaultCategories);
+      const languages = load(LS.languages, defaultLanguages);
+      const recent = load(LS.recent, []);
+      const activities = load(LS.activities, []);
+      const mostViewed = [...snippets].sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
+
+      const nav = `
+      <header class="sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800/80 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="h-16 flex items-center justify-between gap-3">
+            <button class="flex items-center gap-2 font-semibold text-lg" onclick="go('#home')"><span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white shadow-soft">R</span><span>RzkyLibrary</span></button>
+            <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+              ${['Home','Library','Categories','About','GitHub'].map(x=>`<button onclick="navClick('${x}')" class="px-3 py-2 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800 transition">${x}</button>`).join('')}
+            </nav>
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-2 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800 transition" onclick="toggleSearch()">Search</button>
+              <button class="px-3 py-2 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800 transition" onclick="toggleTheme()">Theme</button>
+              <button class="px-3 py-2 rounded-lg hover:bg-indigo-500 hover:text-white transition" onclick="go('#admin')">Admin</button>
+            </div>
+          </div>
+        </div>
+      </header>`;
+
+      let content = '';
+      if(route.startsWith('#snippet-')){
+        const id = route.replace('#snippet-','');
+        const sn = snippets.find(s=>s.id===id);
+        if(sn){ state.activeSnippet = sn; incMetric(LS.views, id); recordRecent(id); activity(`Viewed snippet: ${sn.title}`); content = snippetDetail(sn, favorites.includes(id)); }
+      } else if(route === '#favorites'){
+        content = libraryPage(snippets.filter(s=>favorites.includes(s.id)), categories, languages, favorites, true);
+      } else if(route === '#admin'){
+        content = adminPage(snippets, categories, languages, activities, mostViewed);
+      } else if(route === '#about'){
+        content = aboutPage();
+      } else if(route === '#categories'){
+        content = categoriesPage(categories, snippets);
+      } else if(route === '#library'){
+        content = libraryPage(filteredSnippets(), categories, languages, favorites, false);
+      } else {
+        content = homePage(snippets, categories, recent);
+      }
+
+      app.innerHTML = nav + `
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        ${content}
+      </main>
+      ${footer()}
+      ${toastLayer()}
+      ${modalLayer()}`;
+      wire();
+    }
+
+    function homePage(snippets, categories, recent){
+      return `
+      <section class="py-12 md:py-16 fade-in">
+        <div class="grid lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 text-sm mb-5">Public code snippet library</div>
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight">Your Developer Toolbox.</h1>
+            <p class="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-xl">Practical code snippets, ready to copy and use.</p>
+            <div class="mt-6 max-w-2xl">
+              <div class="flex gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 shadow-soft">
+                <input id="heroSearch" oninput="liveSearch(this.value)" class="w-full bg-transparent outline-none px-3 py-2" placeholder="Search snippets, components, functions..." />
+                <button onclick="go('#library')" class="px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-500 transition">Search</button>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-3 mt-6 max-w-xl">
+              ${[['100+','Snippets'],['10+','Categories'],['Free','To Use']].map(([a,b])=>`<div class="rounded-2xl p-4 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60"><div class="text-xl font-bold">${a}</div><div class="text-sm text-slate-500">${b}</div></div>`).join('')}
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-cyan-400/20 blur-3xl"></div>
+            <div class="relative rounded-[28px] border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 shadow-glow p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div class="font-semibold">Recently Used</div>
+                <button onclick="go('#library')" class="text-sm text-indigo-500">View all</button>
+              </div>
+              <div class="space-y-3">
+                ${(recent.length ? recent.map(id => snippets.find(s=>s.id===id)).filter(Boolean) : snippets.slice(0,3)).map(sn=>recentItem(sn)).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-8">
+        <div class="flex items-end justify-between mb-4">
+          <div>
+            <h2 class="text-2xl font-semibold">Popular snippets</h2>
+            <p class="text-slate-500">Fast discovery for common developer needs.</p>
+          </div>
+          <button onclick="go('#library')" class="text-sm font-medium text-indigo-500">Open Library</button>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          ${snippets.slice(0,6).map(snippetCard).join('')}
+        </div>
+      </section>`;
+    }
+
+    function libraryPage(snippets, categories, languages, favorites, onlyFav){
+      return `
+      <section class="py-10 fade-in">
+        <div class="flex flex-col gap-5">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-3xl font-bold">${onlyFav ? 'Favorites' : 'Library'}</h2>
+              <p class="text-slate-500">Search → Find → Read → Copy → Paste</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <select id="sort" onchange="setSort(this.value)" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                ${['Newest','A-Z','Most Popular','Difficulty'].map(x=>`<option>${x}</option>`).join('')}
