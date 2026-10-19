@@ -253,4 +253,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
   });
 
+  /* ---------- Jumlah di bagian Library (dari library/data.js) ---------- */
+  if (window.LIBRARY) {
+    const totals = { certs: window.LIBRARY.certs.length, projects: window.LIBRARY.projects.length };
+    document.querySelectorAll('[data-count]').forEach(el => { el.textContent = totals[el.dataset.count]; });
+  }
+
 });
