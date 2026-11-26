@@ -4,6 +4,89 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ---------- Projects (shared with the Library data) ---------- */
+  const projectGrid = document.getElementById('projectGrid');
+  const projectFilters = document.getElementById('projectFilters');
+
+  if (projectGrid && projectFilters && window.LIBRARY) {
+    const projects = window.LIBRARY.projects;
+    const categories = [...new Set(projects.map(project => project.category))];
+
+    projectFilters.replaceChildren();
+    ['all', ...categories].forEach(category => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'filter-btn';
+      button.dataset.filter = category;
+      button.textContent = category === 'all' ? 'All' : category;
+      if (category === 'all') button.classList.add('active');
+      projectFilters.appendChild(button);
+    });
+
+    projectGrid.replaceChildren(...projects.map((project, index) => {
+      const card = document.createElement('article');
+      card.className = 'project-card';
+      card.dataset.category = project.category;
+      card.dataset.title = `${project.title} — ${project.issuer}`;
+      card.dataset.categoryLabel = project.category;
+      card.dataset.desc = project.desc;
+      card.dataset.role = project.role;
+      card.dataset.tech = project.tech.join(',');
+      card.dataset.images = project.imgs.map(image => `library/${image}`).join(',');
+      card.dataset.reveal = '';
+      card.dataset.revealDelay = String(Math.min(index + 1, 4));
+
+      const media = document.createElement('div');
+      media.className = 'project-media';
+      const categoryTag = document.createElement('span');
+      categoryTag.className = 'project-category-tag';
+      categoryTag.textContent = project.category;
+      const slides = document.createElement('div');
+      slides.className = 'slides';
+      const image = document.createElement('img');
+      image.src = `library/${project.imgs[0]}`;
+      image.alt = `Tampilan ${project.title}`;
+      image.loading = 'lazy';
+      slides.appendChild(image);
+      media.append(categoryTag, slides);
+
+      const body = document.createElement('div');
+      body.className = 'project-body';
+      const titleRow = document.createElement('div');
+      titleRow.className = 'project-title-row';
+      const title = document.createElement('h3');
+      title.textContent = project.title;
+      titleRow.appendChild(title);
+      const description = document.createElement('p');
+      description.className = 'project-desc';
+      description.textContent = project.desc;
+
+      const techBadges = document.createElement('div');
+      techBadges.className = 'tech-badges';
+      project.tech.forEach(technology => {
+        const badge = document.createElement('span');
+        badge.className = 'tech-badge';
+        badge.textContent = technology;
+        techBadges.appendChild(badge);
+      });
+
+      const links = document.createElement('div');
+      links.className = 'project-links';
+      const detailButton = document.createElement('button');
+      detailButton.type = 'button';
+      detailButton.className = 'btn btn-ghost btn-sm';
+      detailButton.dataset.openDetail = '';
+      detailButton.textContent = 'Lihat Detail';
+      const linkNote = document.createElement('span');
+      linkNote.className = 'link-note';
+      linkNote.textContent = 'Belum tersedia secara publik';
+      links.append(detailButton, linkNote);
+      body.append(titleRow, description, techBadges, links);
+      card.append(media, body);
+      return card;
+    }));
+  }
+
   /* ---------- Header scroll state ---------- */
   const header = document.getElementById('siteHeader');
   const scrollProgress = document.getElementById('scrollProgress');
@@ -144,21 +227,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ---------- Project filter ---------- */
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('#projectGrid .project-card');
+  if (projectFilters && projectGrid) {
+    projectFilters.addEventListener('click', (e) => {
+      const button = e.target.closest('.filter-btn');
+      if (!button) return;
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-
-      projectCards.forEach(card => {
-        const match = filter === 'all' || card.dataset.category === filter;
-        card.classList.toggle('hidden-card', !match);
+      projectFilters.querySelectorAll('.filter-btn').forEach(filterButton => {
+        filterButton.classList.toggle('active', filterButton === button);
+      });
+      projectGrid.querySelectorAll('.project-card').forEach(card => {
+        card.classList.toggle('hidden-card',
+          button.dataset.filter !== 'all' && card.dataset.category !== button.dataset.filter);
       });
     });
-  });
+  }
 
   /* ---------- Project detail modal ---------- */
   const modal = document.getElementById('projectModal');

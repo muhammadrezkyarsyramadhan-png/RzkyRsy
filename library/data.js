@@ -71,10 +71,65 @@ window.LIBRARY = {
 
   projects: [
     {
+      id: 'patungan',
+      title: 'Patungan',
+      issuer: 'Aplikasi patungan dan split bill',
+      category: 'Web Application',
+      imgs: ['portofolio/Screenshot 2026-11-26 075904.png'],
+      imgLabels: ['Desktop'],
+      desc: 'Aplikasi untuk membuat grup patungan dan mengelola aktivitas split bill serta belanja bersama.',
+      role: 'Merancang antarmuka dan alur utama aplikasi patungan.',
+      tech: ['HTML', 'CSS', 'JavaScript']
+    },
+    {
+      id: 'ai-study-vault',
+      title: 'AI Study Vault',
+      issuer: 'Dashboard belajar dan flashcard',
+      category: 'Web Application',
+      imgs: ['portofolio/Screenshot 2026-11-26 075550.png'],
+      imgLabels: ['Desktop'],
+      desc: 'Dashboard belajar untuk mengelola materi, flashcard, dan kuis serta melihat ringkasan progres belajar.',
+      role: 'Merancang antarmuka dashboard dan fitur belajar.',
+      tech: ['HTML', 'CSS', 'JavaScript']
+    },
+    {
+      id: 'kostmate',
+      title: 'KostMate',
+      issuer: 'Aplikasi manajemen kos',
+      category: 'Web Application',
+      imgs: ['portofolio/Screenshot 2026-11-26 075455.png'],
+      imgLabels: ['Desktop'],
+      desc: 'Aplikasi untuk membantu pemilik kos mengelola kamar, tagihan, pembayaran, pengumuman, dan laporan perbaikan.',
+      role: 'Merancang antarmuka dan alur pengelolaan kos.',
+      tech: ['HTML', 'CSS', 'JavaScript']
+    },
+    {
+      id: 'acakin',
+      title: 'Acakin',
+      issuer: 'Wheel pengacak nama dan kelompok',
+      category: 'Web Application',
+      imgs: ['portofolio/Screenshot 2026-11-26 075104.png'],
+      imgLabels: ['Desktop'],
+      desc: 'Aplikasi interaktif untuk mengacak nama menggunakan wheel atau membagi peserta ke dalam kelompok.',
+      role: 'Merancang antarmuka dan interaksi pengacakan.',
+      tech: ['HTML', 'CSS', 'JavaScript']
+    },
+    {
+      id: 'ebooks',
+      title: 'Ebooks',
+      issuer: 'Katalog dan toko buku digital',
+      category: 'Web Application',
+      imgs: ['portofolio/Screenshot 2026-11-26 074904.png'],
+      imgLabels: ['Desktop'],
+      desc: 'Tampilan toko buku digital dengan pencarian dan kategori, paket langganan, serta daftar buku terbaru.',
+      role: 'Merancang antarmuka katalog dan toko buku digital.',
+      tech: ['HTML', 'CSS', 'JavaScript']
+    },
+    {
       id: 'artkey',
       title: 'ArtKey',
       issuer: 'Landing page jasa desain',
-      category: 'UI/UX Design',
+      category: 'Web Application',
       imgs: ['portofolio/artkey-desktop.png', 'portofolio/artkey-mobile.png'],
       imgLabels: ['Desktop', 'Mobile'],
       desc: 'Landing page jasa desain digital premium bertema gelap dengan aksen emas. Fokus pada hero section yang kuat, navigasi yang jelas, dan call-to-action yang mudah ditemukan.',
@@ -85,7 +140,7 @@ window.LIBRARY = {
       id: 'applygo',
       title: 'ApplyGo',
       issuer: 'Landing page resume builder',
-      category: 'UI/UX Design',
+      category: 'Web Application',
       imgs: ['portofolio/applygo.png'],
       imgLabels: ['Desktop'],
       desc: 'Landing page platform pembuatan resume berbantuan AI. Tampilan clean dan minimalis dengan alur yang jelas: tulis, sesuaikan dengan deskripsi pekerjaan, lalu ekspor.',

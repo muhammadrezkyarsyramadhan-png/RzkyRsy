@@ -214,83 +214,11 @@
   <div class="section-head" data-reveal>
     <p class="eyebrow">Proyek</p>
     <h2>Karya yang Sudah Saya Bangun</h2>
-    <p class="section-sub">Beberapa proyek nyata yang pernah saya kerjakan — dari tools untuk developer sampai eksplorasi desain antarmuka.</p>
+    <p class="section-sub">Beberapa proyek yang saya kerjakan — dari aplikasi web interaktif hingga eksplorasi desain antarmuka.</p>
   </div>
 
-  <div class="filter-bar" role="group" aria-label="Filter proyek" data-reveal>
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="tools">Tools</button>
-    <button class="filter-btn" data-filter="design">UI/UX Design</button>
-  </div>
-
-  <div class="project-grid" id="projectGrid">
-
-    <!-- PROJECT 2: ArtKey -->
-    <article class="project-card" data-category="design" data-reveal data-reveal-delay="1"
-      data-title="ArtKey — Landing Page Jasa Desain"
-      data-category-label="UI/UX Design"
-      data-desc="Desain antarmuka untuk landing page jasa desain digital premium bertema gelap dengan aksen emas. Fokus pada hero section yang kuat, navigasi yang jelas, dan call-to-action yang mudah ditemukan."
-      data-role="Merancang tampilan halaman (hero, navigasi, CTA) serta menyusun struktur HTML &amp; CSS-nya."
-      data-tech="HTML,CSS,JavaScript"
-      data-images="library/portofolio/artkey-desktop.png,library/portofolio/artkey-mobile.png">
-      <div class="project-media">
-        <span class="project-category-tag">UI/UX Design</span>
-        <div class="slides">
-          <img src="library/portofolio/artkey-desktop.png" alt="Tampilan desktop landing page ArtKey" loading="lazy">
-        </div>
-      </div>
-      <div class="project-body">
-        <div class="project-title-row"><h3>ArtKey</h3></div>
-        <p class="project-desc">Desain landing page untuk jasa desain digital premium — tema gelap dengan aksen warna emas yang elegan.</p>
-        <div class="tech-badges">
-          <span class="tech-badge">HTML</span><span class="tech-badge">CSS</span><span class="tech-badge">JavaScript</span>
-        </div>
-        <div class="project-links">
-          <button type="button" class="btn btn-ghost btn-sm" data-open-detail>Lihat Detail</button>
-          <span class="link-note">Belum tersedia secara publik</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- PROJECT 3: ApplyGo -->
-    <article class="project-card" data-category="design" data-reveal data-reveal-delay="2"
-      data-title="ApplyGo — Resume Builder Landing Page"
-      data-category-label="UI/UX Design"
-      data-desc="Desain antarmuka untuk platform pembuatan resume berbantuan AI. Tampilan clean dan minimalis dengan fokus pada kejelasan alur: tulis, sesuaikan dengan deskripsi pekerjaan, lalu ekspor."
-      data-role="Merancang struktur halaman dan tampilan visual (hero, section fitur, CTA)."
-      data-tech="HTML,CSS,JavaScript"
-      data-images="library/portofolio/applygo.png">
-      <div class="project-media">
-        <span class="project-category-tag">UI/UX Design</span>
-        <div class="slides">
-          <img src="library/portofolio/applygo.png" alt="Tampilan landing page ApplyGo" loading="lazy">
-        </div>
-      </div>
-      <div class="project-body">
-        <div class="project-title-row"><h3>ApplyGo</h3></div>
-        <p class="project-desc">Desain landing page untuk platform pembuatan resume berbasis AI, dengan tampilan clean dan minimalis.</p>
-        <div class="tech-badges">
-          <span class="tech-badge">HTML</span><span class="tech-badge">CSS</span><span class="tech-badge">JavaScript</span>
-        </div>
-        <div class="project-links">
-          <button type="button" class="btn btn-ghost btn-sm" data-open-detail>Lihat Detail</button>
-          <span class="link-note">Belum tersedia secara publik</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- COMING SOON -->
-    <article class="project-card coming-soon" data-category="all" data-reveal data-reveal-delay="3">
-      <div class="project-media">
-        <div class="coming-soon-icon" aria-hidden="true">+</div>
-      </div>
-      <div class="project-body">
-        <div class="project-title-row"><h3>Proyek Berikutnya</h3></div>
-        <p class="project-desc">Saya terus belajar dan membangun. Proyek baru akan ditambahkan di sini seiring waktu.</p>
-      </div>
-    </article>
-
-  </div>
+  <div class="filter-bar" id="projectFilters" role="group" aria-label="Filter proyek" data-reveal></div>
+  <div class="project-grid" id="projectGrid"></div>
 </section>
 
 <!-- Project detail modal -->
@@ -335,7 +263,7 @@
       <span class="library-go">Buka sertifikat</span>
     </a>
     <a class="library-card" href="library/index.html#portofolio" data-reveal data-reveal-delay="1">
-      <span class="library-count" data-count="projects">2</span>
+      <span class="library-count" data-count="projects">7</span>
       <h3>Portofolio</h3>
       <p>Proyek UI/UX dan frontend, lengkap dengan peran dan teknologinya.</p>
       <span class="library-go">Buka portofolio</span>
